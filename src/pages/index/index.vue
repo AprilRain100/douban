@@ -8,7 +8,7 @@
       <span class="more">更多></span>
     </div>
     <div class="list">
-      <div class="one" v-for="(item, index) in in_theatersData.subjects" :key="index" v-if="$inedx < 6">
+      <div class="one" v-for="(item, index) in in_theatersData.subjects" :key="index">
         <img :src="item.images.small" alt="">
         <div class="name">{{item.title}}</div>
         <div class="start"></div>
