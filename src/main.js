@@ -14,7 +14,8 @@ export default {
     pages: [
       'pages/me/main',
       '^pages/index/main',
-      'pages/discover/main'
+      'pages/discover/main',
+      'pages/detail/main'
     ],
     window: {
       backgroundTextStyle: 'light',

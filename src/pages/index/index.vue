@@ -1,14 +1,17 @@
 <template>
   <div>
     <div class="search">
-      <input type="search" placeholder="搜索">
+      <a href="/pages/detail/main">
+        <img src="../../../static/img/search.png" alt="">
+        <input type="search" placeholder="搜索" disabled="disabled">
+      </a>
     </div>
     <div class="title">
       <span class="text">近期上映</span>
       <span class="more">更多></span>
     </div>
     <div class="list">
-      <div class="one" v-for="(item, index) in in_theatersData.subjects" :key="index">
+      <div class="one" v-for="(item, index) in in_theatersData.subjects" :key="index" v-if="index < 6" @click="goDetail(item)">
         <img :src="item.images.small" alt="">
         <div class="name">{{item.title}}</div>
         <div class="start"></div>
@@ -17,12 +20,26 @@
     </div>
 
     <div class="title">
-      <span class="text">热门电影</span>
+      <span class="text">即将上映</span>
       <span class="more">更多></span>
     </div>
 
     <div class="list">
-      <div class="one" v-for="(item, index) in coming_soonData.subjects" :key="index">
+      <div class="one" v-for="(item, index) in coming_soonData.subjects" :key="index" v-if="index < 6" @click="goDetail(item)">
+        <img :src="item.images.small" alt="">
+        <div class="name">{{item.title}}</div>
+        <div class="start"></div>
+        <div class="num">{{item.rating.average}}</div>
+      </div>
+    </div>
+
+    <div class="title">
+      <span class="text">动漫</span>
+      <span class="more">更多></span>
+    </div>
+
+    <div class="list">
+      <div class="one" v-for="(item, index) in cartoonData.subjects" :key="index" v-if="index < 6" @click="goDetail(item)">
         <img :src="item.images.small" alt="">
         <div class="name">{{item.title}}</div>
         <div class="start"></div>
@@ -37,7 +54,8 @@
 import card from '@/components/card';
 import config from '../../utils/config'
 import {requestGet} from '../../utils/reques'
-import {in_theaters, coming_soon} from '../../utils/getData'
+import { mapState, mapActions } from 'vuex'
+import {in_theaters, coming_soon, search} from '../../utils/getData'
 
 export default {
   data () {
@@ -45,18 +63,39 @@ export default {
       motto: 'Hello World',
       userInfo: {},
       in_theatersData: {},
-      coming_soonData: {}
+      coming_soonData: {},
+      // cartoonData: {}
     }
   },
 
   components: {
     card
   },
-
+  computed: {
+    ...mapState([
+      'cartoonData'
+    ])
+  },
   methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      wx.navigateTo({ url })
+    ...mapActions([
+      'searchMoive',
+      'movieDetail'
+    ]),
+    goDetail2 (item) {
+
+    },
+    goDetail (item) {
+      console.log(item)
+      this.$store.commit('TESTMUTATIONS', '哈哈哈')
+      console.log(this.$store.state)
+      const url = '/pages/detail/main?item=' + JSON.stringify(item);
+      this.movieDetail(item.id)
+      wx.navigateTo({
+        url: url,
+        success: () => {
+          wx.setNavigationBarTitle({ title: item.title })
+        }
+      })
     },
     getUserInfo () {
       // 调用登录接口
@@ -77,6 +116,7 @@ export default {
 
   created () {
     // 调用应用实例的方法获取全局数据
+    console.log(this.$store)
     this.getUserInfo()
     in_theaters(res=> {
       this.in_theatersData = res;
@@ -86,6 +126,10 @@ export default {
       this.coming_soonData = res;
       console.log(res)
     });
+    // search({tag: '动漫'}, res => {
+    //   this.cartoonData = res;
+    // })
+    this.searchMoive('动漫')
   }
 }
 </script>
@@ -93,6 +137,7 @@ export default {
 <style lang="scss" scoped>
   $green: #42bd56;
 .search {
+  position: relative;
   width: 100%;
   padding: 20px 0 10px 0;
   background: $green;
@@ -108,6 +153,14 @@ export default {
     border-radius: 5px;
     font-size: 16px;
     text-align: center;
+  }
+  img {
+    position: absolute;
+    top: 24px;
+    left: 135px;
+    width: 25px;
+    height: 25px;
+    z-index: 4;
   }
 }
   .title {

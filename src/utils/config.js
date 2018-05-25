@@ -3,6 +3,9 @@ const baseUrl = 'https://douban.uieee.com';
 const config = {
   in_theaters: baseUrl + '/v2/movie/in_theaters', // 正在上映
   coming_soon: `${baseUrl}/v2/movie/coming_soon`, // 即将上映
+  search: `${baseUrl}/v2/movie/search`, // 动漫
+  movieDetail: `${baseUrl}/v2/movie/subject/`
+
 };
 
 
@@ -17,4 +20,3 @@ const config = {
 //   config: config
 // }
 export default config;
-;

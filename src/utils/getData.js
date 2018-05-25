@@ -18,3 +18,11 @@ export const coming_soon = (params, callBack) => {
     return typeof params === 'function' ? params(res) : callBack(res)
   })
 }
+export const search = (params, callBack) => {
+  requestGet({
+    url: api.search,
+    data: params
+  }).then(res => {
+    return typeof params === 'function' ? params(res) : callBack(res)
+  })
+}

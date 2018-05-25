@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import App from './index'
-
-const app = new Vue(App)
+import store from '../../store/index'
+const app = new Vue({
+  store,
+  ...App
+})
 app.$mount()
 export default {
   config: {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '电影',
     navigationBarBackgroundColor: '#42bd56',
     navigationBarTextStyle: 'white'
   }

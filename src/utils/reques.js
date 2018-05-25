@@ -1,5 +1,9 @@
 const requestGet = obj => {
   return new Promise((resolve, reject) => {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
+    });
     wx.request({
       url: obj.url,
       header: obj.headers || { 'content-type': 'application/x-www-form-urlencoded' },
@@ -8,6 +12,7 @@ const requestGet = obj => {
       success: function (res) {
         //自行处理返回结果
         console.log('返回结果：', res.data);
+        wx.hideLoading();
         if (res && res.statusCode === 200) {
           let data = res.data;
             resolve(data);
