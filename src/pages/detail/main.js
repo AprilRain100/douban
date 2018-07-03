@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './detail'
-import store from '../../store/index'
+// import store from '../../store/index'
 const app = new Vue({
-  store,
+//   store,
   ...App
 })
 app.$mount()

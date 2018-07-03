@@ -1,5 +1,9 @@
+/**
+ * 已废弃，已找到更高级的方法 捂脸.jpg
+ */
+
 import {requestGet} from './reques.js'
-import api from './config.js'
+import {config as api} from './config.js'
 
 export const in_theaters = (params, callBack) => {
   requestGet({

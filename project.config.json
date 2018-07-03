@@ -10,7 +10,7 @@
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
 	"appid": "wx7b495b6c15bd4c94",
-	"projectname": "my-project",
+	"projectname": "douban",
 	"condition": {
 		"search": {
 			"current": -1,

@@ -39,7 +39,7 @@
     </div>
 
     <div class="list">
-      <div class="one" v-for="(item, index) in cartoonData.subjects" :key="index" v-if="index < 6" @click="goDetail(item)">
+      <div class="one" v-for="(item, index) in cartoonData" :key="index" v-if="index < 6" @click="goDetail(item)">
         <img :src="item.images.small" alt="">
         <div class="name">{{item.title}}</div>
         <div class="start"></div>
@@ -52,10 +52,9 @@
 
 <script>
 import card from '@/components/card';
-import config from '../../utils/config'
-import {requestGet} from '../../utils/reques'
 import { mapState, mapActions } from 'vuex'
-import {in_theaters, coming_soon, search} from '../../utils/getData'
+import api from '../../utils/fly-getData'
+import store2 from '../counter/store'
 
 export default {
   data () {
@@ -73,18 +72,27 @@ export default {
   },
   computed: {
     ...mapState([
-      'cartoonData'
+      'cartoonData',
+      'count'
     ])
   },
   methods: {
     ...mapActions([
       'searchMoive',
-      'movieDetail'
+      'movieDetail',
+      'f_getSalesInfo'
     ]),
     goDetail2 (item) {
 
     },
     goDetail (item) {
+    //     wx.navigateTo({
+    //     url: '/pages/counter/main',
+    //     success: () => {
+    //       wx.setNavigationBarTitle({ title: item.title })
+    //     }
+    //   })
+    //   return false;
       console.log(item)
       this.$store.commit('TESTMUTATIONS', '哈哈哈')
       console.log(this.$store.state)
@@ -114,22 +122,27 @@ export default {
     }
   },
 
-  created () {
+  async created () {
     // 调用应用实例的方法获取全局数据
-    console.log(this.$store)
-    this.getUserInfo()
-    in_theaters(res=> {
-      this.in_theatersData = res;
-      console.log(res)
-    });
-    coming_soon(res=> {
-      this.coming_soonData = res;
-      console.log(res)
-    });
-    // search({tag: '动漫'}, res => {
-    //   this.cartoonData = res;
-    // })
-    this.searchMoive('动漫')
+    this.getUserInfo();
+    this.in_theatersData = await api.in_theaters();
+    this.coming_soonData = await api.coming_soon();
+    this.searchMoive({
+      tag: '动漫'
+    })
+    let params = {
+      token: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjUiLCJpYXQiOjE1MzA1MjE5MzB9.65wFHpmRPpCimevhiFvBeNxj0Kv53Lrk-x1_vE0EgFA',
+      sales_id: 125
+    };
+    /**
+     * 这里看情况 直接调用api里的接口方法也行，省事，不必再vuex 的actions再重新写一遍。
+     * 如果要在调用接口的时候用到vuex的 commit和state 就再vuex  的actions 调用一遍。
+     */
+    const {data} = await api.getSalesInfo(params);
+    console.log('res====', data);
+
+    const r = await this.f_getSalesInfo(params);
+    console.log(r)
   }
 }
 </script>

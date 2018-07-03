@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {requestGet} from '../utils/reques'
-import api from '../utils/config'
+import {config as api} from '../utils/config'
+import f from '../utils/fly-getData'
+import http from '../utils/http'
 Vue.use(Vuex)
 
 const state = {
@@ -24,19 +25,18 @@ const mutations = {
 };
 
 const actions = {
-  async searchMoive ({state, commit}, params) {
-    let data = await requestGet({
-      url: api.search,
-      data: {tag: params}
-    });
-    commit('CARTOONDATA', data)
-  },
   async movieDetail ({state, commit}, id) {
-    let data = await requestGet({
-      url: api.movieDetail + id,
-      data: {}
-    });
+    let data = await http.get(api.movieDetail + id);
     commit('MVDETAIL', data)
+  },
+  async f_getSalesInfo({commit, state}, params) {
+    const {data} = await f.getSalesInfo(params);
+    return data;
+  },
+  async searchMoive({commit, state}, params) {
+    const {subjects} = await f.search(params);
+    commit('CARTOONDATA', subjects);
+    return subjects;
   }
 };
 
