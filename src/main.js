@@ -19,7 +19,10 @@ export default {
             '^pages/index/main',
             'pages/discover/main',
             'pages/detail/main',
-            'pages/counter/main'
+            'pages/counter/main',
+            'pages/listMovie/main',
+            'pages/moreEssay/main',
+            'pages/search/main'
         ],
         window: {
             backgroundTextStyle: 'light',
@@ -32,12 +35,12 @@ export default {
                 "pagePath": "pages/index/main",
                 'iconPath': './static/img/home.png',
                 'selectedIconPath': './static/img/home2.png',
-                "text": "首页"
+                "text": "电影"
             }, {
                 "pagePath": "pages/discover/main",
                 'iconPath': './static/img/faxian.png',
                 'selectedIconPath': './static/img/faxian2.png',
-                "text": "发现"
+                "text": "音乐"
             }, {
                 "pagePath": "pages/me/main",
                 'iconPath': './static/img/me.png',

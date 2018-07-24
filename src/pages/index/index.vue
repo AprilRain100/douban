@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="search">
-      <a href="/pages/detail/main">
+      <a href="/pages/search/main">
         <img src="../../../static/img/search.png" alt="">
         <input type="search" placeholder="搜索" disabled="disabled">
       </a>
     </div>
     <div class="title">
       <span class="text">近期上映</span>
-      <span class="more">更多></span>
+      <span class="more" @click="more('近期上映')">更多></span>
     </div>
     <div class="list">
       <div class="one" v-for="(item, index) in in_theatersData.subjects" :key="index" v-if="index < 6" @click="goDetail(item)">
@@ -21,7 +21,7 @@
 
     <div class="title">
       <span class="text">即将上映</span>
-      <span class="more">更多></span>
+      <span class="more" @click="more('即将上映')">更多></span>
     </div>
 
     <div class="list">
@@ -35,7 +35,7 @@
 
     <div class="title">
       <span class="text">动漫</span>
-      <span class="more">更多></span>
+      <span class="more" @click="more('动漫')">更多></span>
     </div>
 
     <div class="list">
@@ -46,8 +46,6 @@
         <div class="num">{{item.rating.average}}</div>
       </div>
     </div>
-    <open-data type="userNickName"></open-data>
-    <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">三生三世</button>
     <!--<a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>-->
   </div>
 </template>
@@ -87,7 +85,7 @@ export default {
     goDetail2 (item) {
 
     },
-    goDetail (item) {
+    async goDetail (item) {
     //     wx.navigateTo({
     //     url: '/pages/counter/main',
     //     success: () => {
@@ -99,7 +97,7 @@ export default {
       this.$store.commit('TESTMUTATIONS', '哈哈哈')
       console.log(this.$store.state)
       const url = '/pages/detail/main?item=' + JSON.stringify(item);
-      this.movieDetail(item.id)
+      await this.movieDetail(item.id)
       wx.navigateTo({
         url: url,
         success: () => {
@@ -107,18 +105,36 @@ export default {
         }
       })
     },
-    onGotUserInfo (e) {
-      console.log(e, '????');
-        if (!e.target.userInfo) {
-        wx.openSetting();
-        return;
-        }
-    },
     clickHandle (msg, ev) {
       console.log('clickHandle:', msg, ev)
+    },
+    more(title) {
+        wx.navigateTo({
+        url: '/pages/listMovie/main?type=' + title,
+        success: () => {
+          wx.setNavigationBarTitle({ title: title })
+        }
+      })
     }
   },
-
+  beforeMount() {
+      console.log(123)
+  },
+  mounted() {
+      console.log('mounted')
+  },
+  async onShow() {
+    let r1 = api.in_theaters();
+    let r2 = api.coming_soon();
+    let r3 = this.searchMoive({tag: '动漫'});
+    this.in_theatersData = await r1;
+    this.coming_soonData = await r2;
+    await r3;
+    console.log(this.coming_soonData, '即将上映')
+    console.log(this.in_theatersData, '近期上映')
+    this.$store.commit('RECENTSHOW', this.in_theatersData); // 近期上映
+    this.$store.commit('COMINGSOON', this.coming_soonData); // 即将上映
+  },
   async created () {
     // 调用应用实例的方法获取全局数据
     // wx.openSetting();
@@ -126,12 +142,18 @@ export default {
     //   token: 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjUiLCJpYXQiOjE1MzA1MjE5MzB9.65wFHpmRPpCimevhiFvBeNxj0Kv53Lrk-x1_vE0EgFA',
     //   sales_id: 125
     // };
-    let r1 = api.in_theaters();
-    let r2 = api.coming_soon();
-    let r3 = this.searchMoive({tag: '动漫'});
-    this.in_theatersData = await r1;
-    this.coming_soonData = await r2;
-    await r3;
+
+    // let r1 = api.in_theaters();
+    // let r2 = api.coming_soon();
+    // let r3 = this.searchMoive({tag: '动漫'});
+    // this.in_theatersData = await r1;
+    // this.coming_soonData = await r2;
+    // await r3;
+    // console.log(this.coming_soonData, '即将上映')
+    // console.log(this.in_theatersData, '近期上映')
+    // this.$store.commit('RECENTSHOW', this.in_theatersData); // 近期上映
+    // this.$store.commit('COMINGSOON', this.coming_soonData); // 即将上映
+
     /**
      * 共有两种async await 并发的方法
      * 上面使用的是先用变量统一声明请求方法 然后再使用await调用

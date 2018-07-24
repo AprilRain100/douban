@@ -5,6 +5,9 @@
         <card :text="(index + 1) + ' . ' + log"></card>
       </li>
     </ul>
+
+     <open-data type="userNickName"></open-data>
+    <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button>
   </div>
 </template>
 
@@ -22,7 +25,15 @@ export default {
       logs: []
     }
   },
-
+  methods: {
+    onGotUserInfo (e) {
+      console.log(e, '????');
+        if (!e.target.userInfo) {
+        wx.openSetting();
+        return;
+        }
+    }
+  },
   created () {
     const logs = (wx.getStorageSync('logs') || [])
     this.logs = logs.map(log => formatTime(new Date(log)))

@@ -28,62 +28,125 @@
       <div class="synopsis-title" v-text="mv_detail.original_title + '的剧情简介'"></div>
       <p v-text="mv_detail.summary"></p>
     </div>
+
+    <div class="synopsis comments_count">
+      <div class="synopsis-title" v-text="'短评(' + mv_detail.comments_count + ')'"></div>
+     <div class="count-box" v-for="(item, index) in mv_detail.popular_comments" :key="index">
+         <div class="author">
+             <img :src="item.author.avatar" alt="">
+             <span v-text="item.author.name"></span>
+             <!-- <span>{{item.rating.value}}</span> -->
+              <div class="star-rating">
+        <div class="star-rating-top" :style="{width: item.rating.value * 20 + '%'}">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+        </div>
+        <div class="star-rating-bottom">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+        </div>
+    </div>
+         </div>
+         <div class="created_at" v-text="item.created_at"></div>
+         <p v-text="item.content"></p>
+     </div>
+    </div>
+    <div class="more-essay" @click="goMoreEssay(item)">查看更多短评</div>
+
+ <div class="synopsis comments_count">
+      <div class="synopsis-title" v-text="'影评(' + mv_detail.reviews_count + ')'"></div>
+     <div class="count-box" v-for="(item, index) in mv_detail.popular_reviews" :key="index" v-if="index < 5">
+         <h3 v-text="item.title"></h3>
+         <div class="author">
+             <span class="name" v-text="item.author.name" style="font-size: 12px;"></span>
+                <div class="star-rating">
+        <div class="star-rating-top" :style="{width: item.rating.value * 20 + '%'}">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+        </div>
+        <div class="star-rating-bottom">
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+            <span>★</span>
+        </div>
+    </div>
+         </div>
+     </div>
+         <div class="more-essay">查看更多影评</div>
+    </div>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
-  export default {
-    name: "detail",
-    data() {
-      return {
-        detailData: {},
-        bigImg: '',
-        rating: {},
-        ratings_count: ''
+import { mapState, mapActions } from "vuex";
+export default {
+  name: "detail",
+  data() {
+    return {
+      detailData: {},
+      bigImg: "",
+      rating: {},
+      ratings_count: ""
+    };
+  },
+  computed: {
+    ...mapState(["mv_detail"]),
+    genres() {
+      if (this.mv_detail.genres) {
+        return this.mv_detail.genres.join(" / ");
       }
     },
-    computed: {
-      ...mapState([
-        'mv_detail'
-      ]),
-      genres () {
-        return this.mv_detail.genres.join(' / ')
-      },
-      castName () {
-        const cast = this.mv_detail.casts;
-        let newArr = cast.map(item => {
-          return item.name
-        });
-        let three = newArr.slice(0, 3);
-        return three.join(' / ')
-      }
-    },
-    methods: {
-      ...mapActions([
-        'movieDetail'
-      ]),
-    },
-    mounted() {
-      console.log(this.mv_detail)
-      // this.detailData = JSON.parse(this.$root.$mp.query.item);
-      // this.bigImg = this.detailData.images.medium;
-      // this.rating = this.detailData.rating;
-      // this.ratings_count = this.detailData.ratings_count
-      // console.log(this.detailData)
-      // this.movieDetail(this.detailData.id)
+    castName() {
+      const cast = this.mv_detail.casts;
+      if (!cast) return;
+      let newArr = cast.map(item => {
+        return item.name;
+      });
+      let three = newArr.slice(0, 3);
+      return three.join(" / ");
     }
+  },
+  methods: {
+    ...mapActions(["movieDetail"]),
+    goMoreEssay() {
+      wx.navigateTo({
+        url: '/pages/moreEssay/main?id=' + this.mv_detail.id,
+        success: () => {
+          // wx.setNavigationBarTitle({ title: item.title })
+        }
+      })
+    }
+  },
+  mounted() {
+    console.log(this.mv_detail);
+    // this.detailData = JSON.parse(this.$root.$mp.query.item);
+    // this.bigImg = this.detailData.images.medium;
+    // this.rating = this.detailData.rating;
+    // this.ratings_count = this.detailData.ratings_count
+    // console.log(this.detailData)
+    // this.movieDetail(this.detailData.id)
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  #details {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    width: 100%;
-  }
+#details {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  width: 100%;
   .banner {
     position: relative;
     width: 100%;
@@ -99,7 +162,7 @@
       width: 100%;
       height: 200px;
       background: #000;
-      opacity: .7;
+      opacity: 0.7;
       z-index: 1;
     }
     .banner-content {
@@ -138,13 +201,12 @@
         .people {
           position: absolute;
           left: 70px;
-          top:60px;
-          font-size:12px;
+          top: 60px;
+          font-size: 12px;
           color: #9b9693;
         }
       }
     }
-
   }
   .introduce {
     margin-top: 50px;
@@ -157,7 +219,8 @@
   .want-see {
     display: flex;
     color: #f5cc92;
-    .want, .have {
+    .want,
+    .have {
       margin: 20px;
       width: 300px;
       height: 38px;
@@ -180,4 +243,78 @@
       font-size: 16px;
     }
   }
+  .comments_count {
+    margin-top: 20px;
+    .synopsis-title {
+      padding: 10px 0;
+    }
+    .count-box {
+      margin-bottom: 20px;
+      .author {
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+        }
+      }
+      .created_at {
+        padding-left: 30px;
+        font-size: 12px;
+        color: #b5b5b5;
+      }
+      p {
+        margin-top: 0;
+        padding: 0 10px 0 30px;
+      }
+    }
+    .count-box:first-of-type {
+      background: red;
+      margin-top: 0 !important;
+    }
+  }
+  .more-essay {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #42bd56;
+  }
+}
+
+/* 评分 */
+.star-rating {
+  unicode-bidi: bidi-override;
+  color: #ddd;
+  font-size: 0;
+  height: 25px;
+  margin-left: 5px;
+  position: relative;
+  display: table;
+  padding: 0;
+  text-shadow: 0px 1px 0 #a2a2a2;
+}
+
+.star-rating span {
+  padding: 2px;
+  font-size: 16px;
+}
+
+.star-rating-top {
+  color: #ffd700;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: block;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.star-rating-bottom {
+  padding: 0;
+  display: block;
+  z-index: 0;
+}
 </style>

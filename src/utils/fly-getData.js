@@ -14,6 +14,9 @@ const api = {
   },
   search: (params) => {
     return fly.get(`${baseUrl}/v2/movie/search`, params)
+  },
+  moreEssay: (id) => {
+    return fly.get(`${baseUrl}/v2/movie/subject/${id}/comments`)
   }
 };
 export default api

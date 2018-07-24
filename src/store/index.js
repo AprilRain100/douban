@@ -8,7 +8,9 @@ Vue.use(Vuex)
 const state = {
   test: '1111',
   cartoonData: {},
-  mv_detail: {}
+  mv_detail: {},
+  recentShow: {}, // 即将上映
+  coming_soon: {}, // 近期上映
 };
 
 const mutations = {
@@ -20,8 +22,13 @@ const mutations = {
   },
   MVDETAIL (state, data) {
     state.mv_detail = data;
+  },
+  RECENTSHOW (state, data) {
+      state.recentShow = data;
+  },
+  COMINGSOON(state, data) {
+      state.coming_soon = data;
   }
-
 };
 
 const actions = {
