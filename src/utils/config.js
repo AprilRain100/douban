@@ -1,6 +1,8 @@
 // const baseUrl = 'https://api.douban.com';
 const baseUrl = 'https://douban.uieee.com';
 const land = 'https://mx.xspace.gd.cn'
+const wyy = 'https://120.77.82.37:8088'
+const wyy2 = 'http://neteasemusic.leanapp.cn'
 const config = {
   in_theaters: baseUrl + '/v2/movie/in_theaters', // 正在上映
   coming_soon: `${baseUrl}/v2/movie/coming_soon`, // 即将上映
@@ -24,5 +26,6 @@ const config = {
 export {
     baseUrl,
     config,
-    land
+    land,
+    wyy
 }

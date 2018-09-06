@@ -10,7 +10,7 @@ http.config.headers={ 'token': 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwiaWF0IjoxNTM
 // //设置超时
 // fly.config.timeout=10000;
 // //设置请求基地址
-http.config.baseURL= land || baseUrl;
+// http.config.baseURL= '/api' || baseUrl;
 
 http.interceptors.request.use((request) => {
   request.headers["content-type"]="application/x-www-form-urlencoded";
